@@ -228,7 +228,21 @@ function App() {
       <header className="bg-[#2C3E7C] text-white py-6 sm:py-8 px-3 sm:px-4">
         <div className="max-w-7xl mx-auto">
           <div className="flex justify-between items-start mb-4">
-            <div className="flex-1"></div>
+            <button
+              onClick={handleReset}
+              className="flex items-center gap-2 hover:opacity-90 transition-opacity duration-200 cursor-pointer group"
+              aria-label="Reset calculator"
+            >
+              <img
+                src="/logo_rumah_advisor.png"
+                alt="Rumah Advisor Logo"
+                className="h-8 sm:h-10 md:h-12 w-auto transition-transform duration-200 group-hover:scale-105"
+              />
+              <div className="flex items-baseline gap-1 hidden sm:flex">
+                <span className="text-lg md:text-xl lg:text-2xl font-light">rumah</span>
+                <span className="text-lg md:text-xl lg:text-2xl font-bold">Advisor</span>
+              </div>
+            </button>
             <div className="flex items-center gap-2 sm:gap-3 relative">
               {currentUser ? (
                 <>
