@@ -5,6 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
+    "prebuild": "rm -rf .vite dist *.timestamp-*.mjs vite.config.*.timestamp-*.mjs 2>/dev/null || true",
     "build": "vite build",
     "lint": "eslint .",
     "preview": "vite preview",
