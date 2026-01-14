@@ -11,6 +11,7 @@ import SignInModal from './components/SignInModal';
 import SignUpModal from './components/SignUpModal';
 import ForgotPasswordModal from './components/ForgotPasswordModal';
 import WhatsNewModal from './components/WhatsNewModal';
+import Logo from './components/Logo';
 import { User } from '@supabase/supabase-js';
 import { saveToLocalStorage, loadFromLocalStorage } from './utils/localStorage';
 
@@ -228,7 +229,7 @@ function App() {
       <header className="bg-[#2C3E7C] text-white py-6 sm:py-8 px-3 sm:px-4">
         <div className="max-w-7xl mx-auto">
           <div className="flex justify-between items-start mb-4">
-            <div className="flex-1"></div>
+            <Logo onClick={handleReset} />
             <div className="flex items-center gap-2 sm:gap-3 relative">
               {currentUser ? (
                 <>
