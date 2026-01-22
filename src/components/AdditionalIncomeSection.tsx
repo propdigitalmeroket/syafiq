@@ -2,6 +2,7 @@ import { IncomeBreakdown, PassiveIncomeType, DividendType } from '../types';
 import { formatCurrency, isHustleIncomeValid } from '../utils/calculations';
 import { AlertTriangle } from 'lucide-react';
 import { Language, translations } from '../translations';
+import CustomSelect from './CustomSelect';
 
 interface AdditionalIncomeSectionProps {
   income: IncomeBreakdown;
@@ -44,17 +45,12 @@ export default function AdditionalIncomeSection({
             onChange={(e) => handleIncomeInput('annualBonus', e.target.value)}
             className="flex-1 px-3 sm:px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
           />
-          <select
+          <CustomSelect
             value={income.bonusYear}
-            onChange={(e) => onIncomeChange('bonusYear', parseInt(e.target.value))}
-            className="w-full sm:w-auto max-w-full px-3 sm:px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white sm:min-w-[120px] text-sm sm:text-base"
-          >
-            {yearOptions.map((year) => (
-              <option key={year} value={year}>
-                {year}
-              </option>
-            ))}
-          </select>
+            onValueChange={(value) => onIncomeChange('bonusYear', parseInt(value))}
+            options={yearOptions.map((year) => ({ value: String(year), label: String(year) }))}
+            className="w-full sm:w-auto sm:min-w-[120px]"
+          />
         </div>
         <p className="text-xs text-gray-500 mt-1">{t.income.bonusNote}</p>
       </div>
@@ -71,14 +67,15 @@ export default function AdditionalIncomeSection({
             onChange={(e) => handleIncomeInput('passiveIncome', e.target.value)}
             className="flex-1 px-3 sm:px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
           />
-          <select
+          <CustomSelect
             value={income.passiveIncomeType}
-            onChange={(e) => onIncomeChange('passiveIncomeType', e.target.value as PassiveIncomeType)}
-            className="w-full sm:w-auto max-w-full px-3 sm:px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white sm:min-w-[180px] text-sm sm:text-base truncate"
-          >
-            <option value="RENTAL">{t.income.rental}</option>
-            <option value="Other Passive Income">{t.income.otherPassive}</option>
-          </select>
+            onValueChange={(value) => onIncomeChange('passiveIncomeType', value as PassiveIncomeType)}
+            options={[
+              { value: 'RENTAL', label: t.income.rental },
+              { value: 'Other Passive Income', label: t.income.otherPassive },
+            ]}
+            className="w-full sm:w-auto sm:min-w-[180px]"
+          />
         </div>
         <p className="text-xs text-gray-500 mt-1">{t.income.passiveIncomeNote}</p>
       </div>
@@ -95,14 +92,15 @@ export default function AdditionalIncomeSection({
             onChange={(e) => handleIncomeInput('dividendPassiveIncome', e.target.value)}
             className="flex-1 px-3 sm:px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
           />
-          <select
+          <CustomSelect
             value={income.dividendType}
-            onChange={(e) => onIncomeChange('dividendType', e.target.value as DividendType)}
-            className="w-full sm:w-auto max-w-full px-3 sm:px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white sm:min-w-[180px] text-sm sm:text-base truncate"
-          >
-            <option value="Tabung Haji Dividend">{t.income.tabungHajiDividend}</option>
-            <option value="ASB Dividend">{t.income.asbDividend}</option>
-          </select>
+            onValueChange={(value) => onIncomeChange('dividendType', value as DividendType)}
+            options={[
+              { value: 'Tabung Haji Dividend', label: t.income.tabungHajiDividend },
+              { value: 'ASB Dividend', label: t.income.asbDividend },
+            ]}
+            className="w-full sm:w-auto sm:min-w-[180px]"
+          />
         </div>
         <p className="text-xs text-gray-500 mt-1">{t.income.dividendNote}</p>
       </div>

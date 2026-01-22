@@ -2,6 +2,7 @@ import { EmploymentType, IncomeBreakdown } from '../types';
 import { formatCurrency, calculateGrossIncome, calculateTotalIncome, calculateEPFDeduction, calculateMonthlyTaxDeduction } from '../utils/calculations';
 import { Plus } from 'lucide-react';
 import { Language, translations } from '../translations';
+import CustomSelect from './CustomSelect';
 
 interface IncomeSectionProps {
   income: IncomeBreakdown;
@@ -64,16 +65,17 @@ export default function IncomeSection({
               onChange={(e) => handleIncomeInput('monthlyGrossSalary', e.target.value)}
               className="flex-1 px-3 sm:px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
             />
-            <select
+            <CustomSelect
               value={income.employmentType}
-              onChange={(e) => onIncomeChange('employmentType', e.target.value as EmploymentType)}
-              className="w-full sm:w-auto max-w-full px-3 sm:px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white sm:min-w-[180px] text-sm sm:text-base truncate"
-            >
-              <option value="Fixed Salary">{t.income.fixedSalary}</option>
-              <option value="Commission Based">{t.income.commissionBased}</option>
-              <option value="Government Employee">{t.income.governmentEmployee}</option>
-              <option value="Self Employed">{t.income.selfEmployed}</option>
-            </select>
+              onValueChange={(value) => onIncomeChange('employmentType', value as EmploymentType)}
+              options={[
+                { value: 'Fixed Salary', label: t.income.fixedSalary },
+                { value: 'Commission Based', label: t.income.commissionBased },
+                { value: 'Government Employee', label: t.income.governmentEmployee },
+                { value: 'Self Employed', label: t.income.selfEmployed },
+              ]}
+              className="w-full sm:w-auto sm:min-w-[180px]"
+            />
           </div>
         </div>
 
