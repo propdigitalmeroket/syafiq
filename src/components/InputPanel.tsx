@@ -104,60 +104,62 @@ export default function InputPanel({
           />
 
           {inputs.showAdditionalIncome && (
-            <AdditionalIncomeSection
-              income={inputs.income}
-              onIncomeChange={onIncomeChange}
-              language={language}
-            />
-          )}
+            <>
+              <AdditionalIncomeSection
+                income={inputs.income}
+                onIncomeChange={onIncomeChange}
+                language={language}
+              />
 
-          {inputs.income.employmentType === 'Government Employee' && (
-            <div className="p-4 bg-green-50 rounded-lg border border-green-200">
-              <label className="flex items-start cursor-pointer hover:bg-green-100 p-2 rounded-lg transition-colors">
-                <input
-                  type="checkbox"
-                  checked={inputs.income.useLPPSA}
-                  onChange={(e) => onIncomeChange('useLPPSA', e.target.checked)}
-                  className="w-4 h-4 text-green-600 rounded mt-0.5"
-                />
-                <div className="ml-3 flex-1">
-                  <span className="text-sm font-semibold text-gray-800">{t.income.useLPPSA}</span>
-                  <p className="text-xs text-gray-600 mt-1">{t.income.lppsaNote}</p>
-                </div>
-              </label>
-            </div>
-          )}
-
-          <div className="bg-gradient-to-r from-blue-50 to-blue-100 rounded-lg p-4 border border-blue-200">
-            <div className="space-y-2">
-              <div className="flex justify-between items-center pb-2 border-b border-blue-300">
-                <span className="text-sm font-medium text-gray-700">{t.income.grossIncome}:</span>
-                <span className="text-blue-700 font-semibold">RM {formatCurrency(grossIncome)}</span>
-              </div>
-
-              {(totalEPFDeduction > 0 || totalTaxDeduction > 0) && (
-                <div className="space-y-1 py-2">
-                  {totalEPFDeduction > 0 && (
-                    <div className="flex justify-between items-center text-sm">
-                      <span className="text-gray-600">{t.income.epfDeduction}:</span>
-                      <span className="text-red-600">- RM {formatCurrency(totalEPFDeduction)}</span>
+              {inputs.income.employmentType === 'Government Employee' && (
+                <div className="p-4 bg-green-50 rounded-lg border border-green-200">
+                  <label className="flex items-start cursor-pointer hover:bg-green-100 p-2 rounded-lg transition-colors">
+                    <input
+                      type="checkbox"
+                      checked={inputs.income.useLPPSA}
+                      onChange={(e) => onIncomeChange('useLPPSA', e.target.checked)}
+                      className="w-4 h-4 text-green-600 rounded mt-0.5"
+                    />
+                    <div className="ml-3 flex-1">
+                      <span className="text-sm font-semibold text-gray-800">{t.income.useLPPSA}</span>
+                      <p className="text-xs text-gray-600 mt-1">{t.income.lppsaNote}</p>
                     </div>
-                  )}
-                  {totalTaxDeduction > 0 && (
-                    <div className="flex justify-between items-center text-sm">
-                      <span className="text-gray-600">{t.income.taxDeduction}:</span>
-                      <span className="text-red-600">- RM {formatCurrency(totalTaxDeduction)}</span>
-                    </div>
-                  )}
+                  </label>
                 </div>
               )}
 
-              <div className="flex justify-between items-center pt-2 border-t border-blue-300">
-                <span className="text-sm font-bold text-gray-800">{t.income.netIncome}:</span>
-                <span className="text-blue-700 text-lg font-bold">RM {formatCurrency(netIncome)}</span>
+              <div className="bg-gradient-to-r from-blue-50 to-blue-100 rounded-lg p-4 border border-blue-200">
+                <div className="space-y-2">
+                  <div className="flex justify-between items-center pb-2 border-b border-blue-300">
+                    <span className="text-sm font-medium text-gray-700">{t.income.grossIncome}:</span>
+                    <span className="text-blue-700 font-semibold">RM {formatCurrency(grossIncome)}</span>
+                  </div>
+
+                  {(totalEPFDeduction > 0 || totalTaxDeduction > 0) && (
+                    <div className="space-y-1 py-2">
+                      {totalEPFDeduction > 0 && (
+                        <div className="flex justify-between items-center text-sm">
+                          <span className="text-gray-600">{t.income.epfDeduction}:</span>
+                          <span className="text-red-600">- RM {formatCurrency(totalEPFDeduction)}</span>
+                        </div>
+                      )}
+                      {totalTaxDeduction > 0 && (
+                        <div className="flex justify-between items-center text-sm">
+                          <span className="text-gray-600">{t.income.taxDeduction}:</span>
+                          <span className="text-red-600">- RM {formatCurrency(totalTaxDeduction)}</span>
+                        </div>
+                      )}
+                    </div>
+                  )}
+
+                  <div className="flex justify-between items-center pt-2 border-t border-blue-300">
+                    <span className="text-sm font-bold text-gray-800">{t.income.netIncome}:</span>
+                    <span className="text-blue-700 text-lg font-bold">RM {formatCurrency(netIncome)}</span>
+                  </div>
+                </div>
               </div>
-            </div>
-          </div>
+            </>
+          )}
 
           <CommitmentsSection
             carLoan={inputs.carLoan}
