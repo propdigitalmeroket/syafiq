@@ -67,7 +67,7 @@ export default function IncomeSection({
             <select
               value={income.employmentType}
               onChange={(e) => onIncomeChange('employmentType', e.target.value as EmploymentType)}
-              className="w-full sm:w-auto px-3 sm:px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white sm:min-w-[180px]"
+              className="w-full sm:w-auto max-w-full px-3 sm:px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white sm:min-w-[180px] text-sm sm:text-base truncate"
             >
               <option value="Fixed Salary">{t.income.fixedSalary}</option>
               <option value="Commission Based">{t.income.commissionBased}</option>

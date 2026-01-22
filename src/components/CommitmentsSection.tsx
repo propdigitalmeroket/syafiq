@@ -106,7 +106,7 @@ export default function CommitmentsSection({
               onChange={(e) =>
                 onUpdateCommitment(commitment.id, 'type', e.target.value as CommitmentType)
               }
-              className="flex-1 px-3 sm:px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm"
+              className="flex-1 max-w-full px-3 sm:px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm truncate"
             >
               {Object.entries(COMMITMENT_OPTIONS).map(([key, value]) => (
                 <option key={key} value={key}>
@@ -125,7 +125,7 @@ export default function CommitmentsSection({
                     onUpdateCommitment(commitment.id, 'amount', numValue);
                   }
                 }}
-                className="flex-1 sm:w-32 px-3 sm:px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm"
+                className="flex-1 sm:w-40 min-w-0 px-3 sm:px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm"
               />
               <button
                 onClick={() => onRemoveCommitment(commitment.id)}

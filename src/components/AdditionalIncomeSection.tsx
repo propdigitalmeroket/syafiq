@@ -47,7 +47,7 @@ export default function AdditionalIncomeSection({
           <select
             value={income.bonusYear}
             onChange={(e) => onIncomeChange('bonusYear', parseInt(e.target.value))}
-            className="w-full sm:w-auto px-3 sm:px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white sm:min-w-[120px]"
+            className="w-full sm:w-auto max-w-full px-3 sm:px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white sm:min-w-[120px] text-sm sm:text-base"
           >
             {yearOptions.map((year) => (
               <option key={year} value={year}>
@@ -74,7 +74,7 @@ export default function AdditionalIncomeSection({
           <select
             value={income.passiveIncomeType}
             onChange={(e) => onIncomeChange('passiveIncomeType', e.target.value as PassiveIncomeType)}
-            className="w-full sm:w-auto px-3 sm:px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white sm:min-w-[180px]"
+            className="w-full sm:w-auto max-w-full px-3 sm:px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white sm:min-w-[180px] text-sm sm:text-base truncate"
           >
             <option value="RENTAL">{t.income.rental}</option>
             <option value="Other Passive Income">{t.income.otherPassive}</option>
@@ -98,7 +98,7 @@ export default function AdditionalIncomeSection({
           <select
             value={income.dividendType}
             onChange={(e) => onIncomeChange('dividendType', e.target.value as DividendType)}
-            className="w-full sm:w-auto px-3 sm:px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white sm:min-w-[180px]"
+            className="w-full sm:w-auto max-w-full px-3 sm:px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white sm:min-w-[180px] text-sm sm:text-base truncate"
           >
             <option value="Tabung Haji Dividend">{t.income.tabungHajiDividend}</option>
             <option value="ASB Dividend">{t.income.asbDividend}</option>
