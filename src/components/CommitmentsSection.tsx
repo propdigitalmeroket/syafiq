@@ -2,7 +2,6 @@ import { CommitmentType, AdditionalCommitment } from '../types';
 import { formatCurrency } from '../utils/calculations';
 import { Plus, X } from 'lucide-react';
 import { Language, translations } from '../translations';
-import CustomSelect from './CustomSelect';
 
 interface CommitmentsSectionProps {
   carLoan: number;
@@ -102,15 +101,19 @@ export default function CommitmentsSection({
             key={commitment.id}
             className="flex flex-col sm:flex-row gap-2 animate-in slide-in-from-top-2 fade-in duration-300"
           >
-            <CustomSelect
+            <select
               value={commitment.type}
-              onValueChange={(value) => onUpdateCommitment(commitment.id, 'type', value as CommitmentType)}
-              options={Object.entries(COMMITMENT_OPTIONS).map(([key, value]) => ({
-                value: key,
-                label: value[language],
-              }))}
-              className="flex-1 max-w-full text-sm"
-            />
+              onChange={(e) =>
+                onUpdateCommitment(commitment.id, 'type', e.target.value as CommitmentType)
+              }
+              className="flex-1 px-3 sm:px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm"
+            >
+              {Object.entries(COMMITMENT_OPTIONS).map(([key, value]) => (
+                <option key={key} value={key}>
+                  {value[language]}
+                </option>
+              ))}
+            </select>
             <div className="flex gap-2">
               <input
                 type="text"
@@ -122,7 +125,7 @@ export default function CommitmentsSection({
                     onUpdateCommitment(commitment.id, 'amount', numValue);
                   }
                 }}
-                className="flex-1 sm:w-40 min-w-0 px-3 sm:px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm"
+                className="flex-1 sm:w-32 px-3 sm:px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm"
               />
               <button
                 onClick={() => onRemoveCommitment(commitment.id)}
