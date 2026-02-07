@@ -1,4 +1,4 @@
-import { CalculatorInputs, CalculationResults, IncomeBreakdown, BankRecommendation } from '../types';
+import { CalculatorInputs, CalculationResults, IncomeBreakdown, BankRecommendation, CoApplicantData } from '../types';
 import { SupabaseBankProfile } from '../lib/supabase';
 
 const STANDARD_INTEREST_RATE = 4.5;
@@ -436,22 +436,92 @@ export function calculateTotalIncome(income: IncomeBreakdown): number {
   );
 }
 
+function calculateIndividualMetrics(
+  income: IncomeBreakdown,
+  carLoan: number,
+  creditCard: number,
+  personalLoan: number,
+  additionalCommitments: { id: string; type: string; amount: number }[]
+) {
+  const additionalCommitmentsSum = additionalCommitments.reduce(
+    (sum, commitment) => sum + commitment.amount,
+    0
+  );
+
+  const totalCommitments = carLoan + creditCard + personalLoan + additionalCommitmentsSum;
+  const grossIncome = calculateGrossIncome(income);
+  const netIncome = calculateTotalIncome(income);
+
+  const dsr = netIncome > 0 ? (totalCommitments / netIncome) * 100 : 0;
+  const remainingIncome = netIncome - totalCommitments;
+
+  return {
+    grossIncome,
+    netIncome,
+    totalCommitments,
+    dsr,
+    remainingIncome,
+  };
+}
+
 export function calculateResults(inputs: CalculatorInputs, banks: SupabaseBankProfile[] = []): CalculationResults {
+  const isJointApplication = inputs.isJointLoan && inputs.coApplicant;
+
+  const applicant1Metrics = calculateIndividualMetrics(
+    inputs.income,
+    inputs.carLoan,
+    inputs.creditCard,
+    inputs.personalLoan,
+    inputs.additionalCommitments
+  );
+
+  let applicant2Metrics;
+  if (isJointApplication && inputs.coApplicant) {
+    applicant2Metrics = calculateIndividualMetrics(
+      inputs.coApplicant.income,
+      inputs.coApplicant.carLoan,
+      inputs.coApplicant.creditCard,
+      inputs.coApplicant.personalLoan,
+      inputs.coApplicant.additionalCommitments
+    );
+  }
+
   const additionalCommitmentsSum = inputs.additionalCommitments.reduce(
     (sum, commitment) => sum + commitment.amount,
     0
   );
 
-  const totalBankCommitments =
+  let coApplicantCommitmentsSum = 0;
+  if (isJointApplication && inputs.coApplicant) {
+    coApplicantCommitmentsSum = inputs.coApplicant.additionalCommitments.reduce(
+      (sum, commitment) => sum + commitment.amount,
+      0
+    );
+  }
+
+  const mainApplicantCommitments =
     inputs.carLoan +
     inputs.creditCard +
     inputs.personalLoan +
     additionalCommitmentsSum;
 
+  const coApplicantCommitments = isJointApplication && inputs.coApplicant
+    ? inputs.coApplicant.carLoan +
+      inputs.coApplicant.creditCard +
+      inputs.coApplicant.personalLoan +
+      coApplicantCommitmentsSum
+    : 0;
+
+  const totalBankCommitments = mainApplicantCommitments + coApplicantCommitments;
   const totalExpenses = totalBankCommitments;
 
-  const grossIncome = calculateGrossIncome(inputs.income);
-  const netIncome = calculateTotalIncome(inputs.income);
+  const grossIncome = isJointApplication && applicant2Metrics
+    ? applicant1Metrics.grossIncome + applicant2Metrics.grossIncome
+    : applicant1Metrics.grossIncome;
+
+  const netIncome = isJointApplication && applicant2Metrics
+    ? applicant1Metrics.netIncome + applicant2Metrics.netIncome
+    : applicant1Metrics.netIncome;
 
   const income = inputs.income;
   let totalEPFDeduction = 0;
@@ -465,6 +535,19 @@ export function calculateResults(inputs: CalculatorInputs, banks: SupabaseBankPr
     const monthlyHustleIncome = income.hustleIncome / 6;
     totalEPFDeduction += calculateEPFDeduction(monthlyHustleIncome, income.hustleHasKWSP);
     totalTaxDeduction += calculateMonthlyTaxDeduction(monthlyHustleIncome, income.hustleHasTax);
+  }
+
+  if (isJointApplication && inputs.coApplicant) {
+    const coIncome = inputs.coApplicant.income;
+    const coGrossMainSalary = coIncome.monthlyGrossSalary + coIncome.fixedAllowance + ((coIncome.annualBonus / 12) * (BANK_BONUS_PERCENTAGE / 100));
+    totalEPFDeduction += calculateEPFDeduction(coGrossMainSalary, coIncome.hasKWSP);
+    totalTaxDeduction += calculateMonthlyTaxDeduction(coGrossMainSalary, coIncome.hasTax);
+
+    if (isHustleIncomeValid(coIncome.hustleHasKWSP, coIncome.hustleHasTax)) {
+      const coMonthlyHustleIncome = coIncome.hustleIncome / 6;
+      totalEPFDeduction += calculateEPFDeduction(coMonthlyHustleIncome, coIncome.hustleHasKWSP);
+      totalTaxDeduction += calculateMonthlyTaxDeduction(coMonthlyHustleIncome, coIncome.hustleHasTax);
+    }
   }
 
   const monthlySalary = netIncome;
@@ -487,13 +570,17 @@ export function calculateResults(inputs: CalculatorInputs, banks: SupabaseBankPr
   const downPaymentPercentage = inputs.requiresDownPayment ? DOWN_PAYMENT_PERCENTAGE : 0;
   const maxLoanAmount = affordablePropertyPrice * (1 - downPaymentPercentage / 100);
 
-  const autoCalculatedRate = calculateInterestRate(inputs.monthlySavings, affordablePropertyPrice, inputs.income.employmentType, banks, inputs.income.useLPPSA);
+  const combinedSavings = isJointApplication && inputs.coApplicant
+    ? inputs.monthlySavings + inputs.coApplicant.monthlySavings
+    : inputs.monthlySavings;
+
+  const autoCalculatedRate = calculateInterestRate(combinedSavings, affordablePropertyPrice, inputs.income.employmentType, banks, inputs.income.useLPPSA);
   const interestRate = inputs.manualInterestRate !== undefined ? inputs.manualInterestRate : autoCalculatedRate;
   const baseRate = calculateAverageInterestRate(banks, inputs.income.employmentType);
   const hasBetterRate = interestRate < baseRate;
 
   const savingsPercentage = affordablePropertyPrice > 0
-    ? (inputs.monthlySavings / affordablePropertyPrice) * 100
+    ? (combinedSavings / affordablePropertyPrice) * 100
     : 0;
 
   const downPayment = affordablePropertyPrice * (downPaymentPercentage / 100);
@@ -556,6 +643,9 @@ export function calculateResults(inputs: CalculatorInputs, banks: SupabaseBankPr
     loanTerm: loanTermYears,
     maxDSRAllowed,
     remainingAfterLoanPayment,
+    isJointApplication,
+    applicant1: isJointApplication ? applicant1Metrics : undefined,
+    applicant2: isJointApplication ? applicant2Metrics : undefined,
   };
 }
 
