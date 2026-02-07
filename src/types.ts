@@ -52,18 +52,6 @@ export interface CalculatorInputs {
   loanTerm: number;
   manualInterestRate?: number;
   requiresDownPayment: boolean;
-  isJointLoan?: boolean;
-  coApplicant?: CoApplicantData;
-}
-
-export interface CoApplicantData {
-  income: IncomeBreakdown;
-  showAdditionalIncome: boolean;
-  carLoan: number;
-  creditCard: number;
-  personalLoan: number;
-  additionalCommitments: AdditionalCommitment[];
-  monthlySavings: number;
 }
 
 export interface BankRecommendation {
@@ -99,19 +87,4 @@ export interface CalculationResults {
   loanTerm: number;
   maxDSRAllowed: number;
   remainingAfterLoanPayment: number;
-  isJointApplication?: boolean;
-  applicant1?: {
-    grossIncome: number;
-    netIncome: number;
-    totalCommitments: number;
-    dsr: number;
-    remainingIncome: number;
-  };
-  applicant2?: {
-    grossIncome: number;
-    netIncome: number;
-    totalCommitments: number;
-    dsr: number;
-    remainingIncome: number;
-  };
 }

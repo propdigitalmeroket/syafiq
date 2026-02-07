@@ -117,20 +117,6 @@ export interface Translations {
     cancel: string;
     confirm: string;
     checkEligibility: string;
-    addJointLoan: string;
-    removeJointLoan: string;
-  };
-  jointLoan: {
-    title: string;
-    mainApplicant: string;
-    coApplicant: string;
-    coApplicantInfo: string;
-    helperText: string;
-    combinedIncome: string;
-    combinedCommitments: string;
-    individualDSR: string;
-    combinedDSR: string;
-    affordabilityIncrease: string;
   };
   dialogs: {
     resetTitle: string;
@@ -316,20 +302,6 @@ export const translations: Record<Language, Translations> = {
       cancel: 'Batal',
       confirm: 'Ya, Set Semula',
       checkEligibility: 'Kira Kelayakan',
-      addJointLoan: 'Joint Loan',
-      removeJointLoan: 'Buang Joint Loan',
-    },
-    jointLoan: {
-      title: 'Permohonan Pinjaman Bersama',
-      mainApplicant: 'Pemohon Utama',
-      coApplicant: 'Pemohon Bersama',
-      coApplicantInfo: 'Maklumat Pemohon Bersama',
-      helperText: 'Gabungkan pendapatan dengan pasangan atau ahli keluarga untuk meningkatkan kelayakan pinjaman anda',
-      combinedIncome: 'Pendapatan Gabungan',
-      combinedCommitments: 'Komitmen Gabungan',
-      individualDSR: 'DSR Individu',
-      combinedDSR: 'DSR Gabungan',
-      affordabilityIncrease: 'Peningkatan Kelayakan',
     },
     dialogs: {
       resetTitle: 'Set Semula Kalkulator?',
@@ -514,20 +486,6 @@ export const translations: Record<Language, Translations> = {
       cancel: 'Cancel',
       confirm: 'Yes, Reset',
       checkEligibility: 'Check Eligibility',
-      addJointLoan: 'Joint Loan',
-      removeJointLoan: 'Remove Joint Loan',
-    },
-    jointLoan: {
-      title: 'Joint Loan Application',
-      mainApplicant: 'Main Applicant',
-      coApplicant: 'Co-Applicant',
-      coApplicantInfo: 'Co-Applicant Information',
-      helperText: 'Combine income with your spouse or family member to increase your loan eligibility',
-      combinedIncome: 'Combined Income',
-      combinedCommitments: 'Combined Commitments',
-      individualDSR: 'Individual DSR',
-      combinedDSR: 'Combined DSR',
-      affordabilityIncrease: 'Affordability Increase',
     },
     dialogs: {
       resetTitle: 'Reset Calculator?',

@@ -1,5 +1,5 @@
 import { useState, useEffect, useMemo, useRef } from 'react';
-import { CalculatorInputs, IncomeBreakdown, CoApplicantData } from './types';
+import { CalculatorInputs, IncomeBreakdown } from './types';
 import InputPanel from './components/InputPanel';
 import ResultsPanel from './components/ResultsPanel';
 import { calculateResults } from './utils/calculations';
@@ -13,33 +13,6 @@ import ForgotPasswordModal from './components/ForgotPasswordModal';
 import WhatsNewModal from './components/WhatsNewModal';
 import { User } from '@supabase/supabase-js';
 import { saveToLocalStorage, loadFromLocalStorage } from './utils/localStorage';
-
-const createDefaultCoApplicant = (): CoApplicantData => ({
-  income: {
-    monthlyGrossSalary: 0,
-    employmentType: 'Fixed Salary',
-    hasKWSP: false,
-    hasTax: false,
-    annualBonus: 0,
-    bonusYear: new Date().getFullYear(),
-    passiveIncome: 0,
-    passiveIncomeType: 'RENTAL',
-    dividendPassiveIncome: 0,
-    dividendType: 'Tabung Haji Dividend',
-    hustleIncome: 0,
-    hustleHasKWSP: false,
-    hustleHasTax: false,
-    commissionIncome: 0,
-    fixedAllowance: 0,
-    useLPPSA: false,
-  },
-  showAdditionalIncome: false,
-  carLoan: 0,
-  creditCard: 0,
-  personalLoan: 0,
-  additionalCommitments: [],
-  monthlySavings: 0,
-});
 
 const initialInputs: CalculatorInputs = {
   income: {
@@ -69,8 +42,6 @@ const initialInputs: CalculatorInputs = {
   monthlySavings: 0,
   loanTerm: 30,
   requiresDownPayment: false,
-  isJointLoan: false,
-  coApplicant: undefined,
 };
 
 function App() {
@@ -145,38 +116,15 @@ function App() {
     saveToLocalStorage(inputs, language);
   }, [inputs, language]);
 
-  const coApplicantTotalCommitments = useMemo(() => {
-    if (!inputs.coApplicant) return 0;
-    const additionalSum = inputs.coApplicant.additionalCommitments.reduce(
-      (sum, c) => sum + c.amount,
-      0
-    );
-    return (
-      inputs.coApplicant.carLoan +
-      inputs.coApplicant.creditCard +
-      inputs.coApplicant.personalLoan +
-      additionalSum
-    );
-  }, [inputs.coApplicant]);
-
   const results = useMemo(() => {
     return calculateResults(inputs, banks);
   }, [inputs, banks]);
 
   const handleInputChange = (field: keyof CalculatorInputs, value: any) => {
-    setInputs((prev) => {
-      if (field === 'isJointLoan' && value === true && !prev.coApplicant) {
-        return {
-          ...prev,
-          [field]: value,
-          coApplicant: createDefaultCoApplicant(),
-        };
-      }
-      return {
-        ...prev,
-        [field]: value,
-      };
-    });
+    setInputs((prev) => ({
+      ...prev,
+      [field]: value,
+    }));
   };
 
   const handleIncomeChange = (field: keyof IncomeBreakdown, value: number) => {
@@ -224,79 +172,6 @@ function App() {
       additionalCommitments: prev.additionalCommitments.map((c) =>
         c.id === id ? { ...c, [field]: value } : c
       ),
-    }));
-  };
-
-  const handleCoApplicantChange = (field: keyof CoApplicantData, value: any) => {
-    setInputs((prev) => ({
-      ...prev,
-      coApplicant: prev.coApplicant ? {
-        ...prev.coApplicant,
-        [field]: value,
-      } : undefined,
-    }));
-  };
-
-  const handleCoApplicantIncomeChange = (field: keyof IncomeBreakdown, value: number | string | boolean) => {
-    setInputs((prev) => ({
-      ...prev,
-      coApplicant: prev.coApplicant ? {
-        ...prev.coApplicant,
-        income: {
-          ...prev.coApplicant.income,
-          [field]: value,
-        },
-      } : undefined,
-    }));
-  };
-
-  const handleAddCoApplicantCommitment = () => {
-    setInputs((prev) => {
-      if (!prev.coApplicant || prev.coApplicant.additionalCommitments.length >= 10) {
-        return prev;
-      }
-      return {
-        ...prev,
-        coApplicant: {
-          ...prev.coApplicant,
-          additionalCommitments: [
-            ...prev.coApplicant.additionalCommitments,
-            {
-              id: Date.now().toString(),
-              type: 'Personal Loan',
-              amount: 0,
-            },
-          ],
-        },
-      };
-    });
-  };
-
-  const handleRemoveCoApplicantCommitment = (id: string) => {
-    setInputs((prev) => ({
-      ...prev,
-      coApplicant: prev.coApplicant ? {
-        ...prev.coApplicant,
-        additionalCommitments: prev.coApplicant.additionalCommitments.filter(
-          (c) => c.id !== id
-        ),
-      } : undefined,
-    }));
-  };
-
-  const handleUpdateCoApplicantCommitment = (
-    id: string,
-    field: 'type' | 'amount',
-    value: any
-  ) => {
-    setInputs((prev) => ({
-      ...prev,
-      coApplicant: prev.coApplicant ? {
-        ...prev.coApplicant,
-        additionalCommitments: prev.coApplicant.additionalCommitments.map((c) =>
-          c.id === id ? { ...c, [field]: value } : c
-        ),
-      } : undefined,
     }));
   };
 
@@ -491,12 +366,6 @@ function App() {
               remainingIncome={results.remainingIncome}
               language={language}
               onCheckEligibility={handleCheckEligibility}
-              onCoApplicantChange={handleCoApplicantChange}
-              onCoApplicantIncomeChange={handleCoApplicantIncomeChange}
-              onAddCoApplicantCommitment={handleAddCoApplicantCommitment}
-              onRemoveCoApplicantCommitment={handleRemoveCoApplicantCommitment}
-              onUpdateCoApplicantCommitment={handleUpdateCoApplicantCommitment}
-              coApplicantTotalCommitments={coApplicantTotalCommitments}
             />
           </div>
           <div className="lg:col-span-3" ref={resultsPanelRef}>
