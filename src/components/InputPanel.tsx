@@ -1,12 +1,13 @@
 import { useState } from 'react';
-import { CalculatorInputs, IncomeBreakdown } from '../types';
+import { CalculatorInputs, IncomeBreakdown, CoApplicantData } from '../types';
 import { formatCurrency, calculateGrossIncome, calculateTotalIncome, calculateEPFDeduction, calculateMonthlyTaxDeduction } from '../utils/calculations';
-import { AlertTriangle } from 'lucide-react';
+import { AlertTriangle, Users } from 'lucide-react';
 import { Language, translations } from '../translations';
 import ConfirmDialog from './ConfirmDialog';
 import IncomeSection from './IncomeSection';
 import AdditionalIncomeSection from './AdditionalIncomeSection';
 import CommitmentsSection from './CommitmentsSection';
+import CoApplicantSection from './CoApplicantSection';
 
 interface InputPanelProps {
   inputs: CalculatorInputs;
@@ -21,6 +22,12 @@ interface InputPanelProps {
   remainingIncome: number;
   language: Language;
   onCheckEligibility?: () => void;
+  onCoApplicantChange?: (field: keyof CoApplicantData, value: any) => void;
+  onCoApplicantIncomeChange?: (field: keyof IncomeBreakdown, value: number | string | boolean) => void;
+  onAddCoApplicantCommitment?: () => void;
+  onRemoveCoApplicantCommitment?: (id: string) => void;
+  onUpdateCoApplicantCommitment?: (id: string, field: 'type' | 'amount', value: any) => void;
+  coApplicantTotalCommitments?: number;
 }
 
 export default function InputPanel({
@@ -36,6 +43,12 @@ export default function InputPanel({
   remainingIncome,
   language,
   onCheckEligibility,
+  onCoApplicantChange,
+  onCoApplicantIncomeChange,
+  onAddCoApplicantCommitment,
+  onRemoveCoApplicantCommitment,
+  onUpdateCoApplicantCommitment,
+  coApplicantTotalCommitments = 0,
 }: InputPanelProps) {
   const [showResetDialog, setShowResetDialog] = useState(false);
   const t = translations[language];
@@ -51,6 +64,10 @@ export default function InputPanel({
 
   const handleCancelReset = () => {
     setShowResetDialog(false);
+  };
+
+  const handleToggleJointLoan = () => {
+    onInputChange('isJointLoan', !inputs.isJointLoan);
   };
 
   const handleNumberInput = (field: 'monthlySavings', value: string) => {
@@ -95,6 +112,16 @@ export default function InputPanel({
       />
       <div className="bg-white rounded-lg shadow-lg p-4 sm:p-6 md:p-8">
         <div className="space-y-8">
+          {inputs.isJointLoan && (
+            <div className="flex items-center gap-3 pb-4 border-b-2 border-gray-300">
+              <div className="w-8 h-8 bg-gray-700 text-white rounded-full flex items-center justify-center font-bold">
+                1
+              </div>
+              <h3 className="text-xl md:text-2xl font-bold text-gray-900">
+                {t.jointLoan.mainApplicant}
+              </h3>
+            </div>
+          )}
           <IncomeSection
             income={inputs.income}
             onIncomeChange={onIncomeChange}
@@ -206,6 +233,20 @@ export default function InputPanel({
           </label>
         </div>
 
+        {inputs.isJointLoan && inputs.coApplicant && onCoApplicantChange && onCoApplicantIncomeChange && (
+          <CoApplicantSection
+            coApplicant={inputs.coApplicant}
+            onCoApplicantChange={onCoApplicantChange}
+            onCoApplicantIncomeChange={onCoApplicantIncomeChange}
+            onAddCoApplicantCommitment={onAddCoApplicantCommitment || (() => {})}
+            onRemoveCoApplicantCommitment={onRemoveCoApplicantCommitment || (() => {})}
+            onUpdateCoApplicantCommitment={onUpdateCoApplicantCommitment || (() => {})}
+            totalBankCommitments={coApplicantTotalCommitments}
+            language={language}
+            selectedYear={inputs.selectedYear}
+          />
+        )}
+
         <div className="space-y-3 pt-6 border-t-2 border-gray-300">
           <div className="bg-gray-50 rounded-lg p-4">
             <div className="flex justify-between items-center">
@@ -246,12 +287,25 @@ export default function InputPanel({
         </div>
 
         <div className="space-y-3">
-          <button
-            onClick={onCheckEligibility}
-            className="w-full py-3 md:py-4 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-lg transition-all duration-200 hover:shadow-lg min-h-[44px]"
-          >
-            {t.buttons.checkEligibility}
-          </button>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <button
+              onClick={handleToggleJointLoan}
+              className={`py-3 md:py-4 font-semibold rounded-lg transition-all duration-200 hover:shadow-lg min-h-[44px] flex items-center justify-center gap-2 ${
+                inputs.isJointLoan
+                  ? 'bg-gray-400 hover:bg-gray-500 text-white'
+                  : 'bg-green-500 hover:bg-green-600 text-white'
+              }`}
+            >
+              <Users size={20} />
+              {inputs.isJointLoan ? t.buttons.removeJointLoan : t.buttons.addJointLoan}
+            </button>
+            <button
+              onClick={onCheckEligibility}
+              className="py-3 md:py-4 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-lg transition-all duration-200 hover:shadow-lg min-h-[44px]"
+            >
+              {t.buttons.checkEligibility}
+            </button>
+          </div>
           <button
             onClick={handleResetClick}
             className="w-full py-3 md:py-4 bg-red-500 hover:bg-red-600 text-white font-semibold rounded-lg transition-all duration-200 hover:shadow-lg min-h-[44px]"

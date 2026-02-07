@@ -117,6 +117,91 @@ export default function ResultsPanel({
           </div>
         </div>
 
+        {results.isJointApplication && results.applicant1 && results.applicant2 && (
+          <div className="bg-blue-50 rounded-lg p-6 shadow-sm border-2 border-blue-200">
+            <h3 className="text-lg font-semibold text-gray-800 mb-4 flex items-center gap-2">
+              <div className="w-6 h-6 bg-blue-500 text-white rounded-full flex items-center justify-center text-xs font-bold">
+                2
+              </div>
+              {t.jointLoan.title}
+            </h3>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="bg-white rounded-lg p-4">
+                <h4 className="text-sm font-semibold text-gray-700 mb-3 flex items-center gap-2">
+                  <div className="w-5 h-5 bg-gray-700 text-white rounded-full flex items-center justify-center text-xs font-bold">
+                    1
+                  </div>
+                  {t.jointLoan.mainApplicant}
+                </h4>
+                <div className="space-y-2 text-sm">
+                  <div className="flex justify-between">
+                    <span className="text-gray-600">{t.income.grossIncome}:</span>
+                    <span className="font-semibold">RM {formatCurrency(results.applicant1.grossIncome)}</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-gray-600">{t.income.netIncome}:</span>
+                    <span className="font-semibold">RM {formatCurrency(results.applicant1.netIncome)}</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-gray-600">{t.commitments.totalCommitments}:</span>
+                    <span className="font-semibold">RM {formatCurrency(results.applicant1.totalCommitments)}</span>
+                  </div>
+                  <div className="flex justify-between pt-2 border-t border-gray-200">
+                    <span className="text-gray-600">{t.jointLoan.individualDSR}:</span>
+                    <span className="font-bold text-blue-700">{results.applicant1.dsr.toFixed(1)}%</span>
+                  </div>
+                </div>
+              </div>
+              <div className="bg-white rounded-lg p-4">
+                <h4 className="text-sm font-semibold text-gray-700 mb-3 flex items-center gap-2">
+                  <div className="w-5 h-5 bg-blue-500 text-white rounded-full flex items-center justify-center text-xs font-bold">
+                    2
+                  </div>
+                  {t.jointLoan.coApplicant}
+                </h4>
+                <div className="space-y-2 text-sm">
+                  <div className="flex justify-between">
+                    <span className="text-gray-600">{t.income.grossIncome}:</span>
+                    <span className="font-semibold">RM {formatCurrency(results.applicant2.grossIncome)}</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-gray-600">{t.income.netIncome}:</span>
+                    <span className="font-semibold">RM {formatCurrency(results.applicant2.netIncome)}</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-gray-600">{t.commitments.totalCommitments}:</span>
+                    <span className="font-semibold">RM {formatCurrency(results.applicant2.totalCommitments)}</span>
+                  </div>
+                  <div className="flex justify-between pt-2 border-t border-gray-200">
+                    <span className="text-gray-600">{t.jointLoan.individualDSR}:</span>
+                    <span className="font-bold text-blue-700">{results.applicant2.dsr.toFixed(1)}%</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div className="mt-4 bg-gradient-to-r from-blue-100 to-blue-50 rounded-lg p-4 border border-blue-300">
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-3 text-center">
+                <div>
+                  <p className="text-xs text-gray-600 mb-1">{t.jointLoan.combinedIncome}</p>
+                  <p className="text-lg font-bold text-blue-700">RM {formatCurrency(results.grossIncome)}</p>
+                </div>
+                <div>
+                  <p className="text-xs text-gray-600 mb-1">{t.jointLoan.combinedCommitments}</p>
+                  <p className="text-lg font-bold text-blue-700">RM {formatCurrency(results.totalBankCommitments)}</p>
+                </div>
+                <div>
+                  <p className="text-xs text-gray-600 mb-1">{t.jointLoan.combinedDSR}</p>
+                  <p className="text-lg font-bold text-blue-700">{results.dsr.toFixed(1)}%</p>
+                </div>
+                <div>
+                  <p className="text-xs text-gray-600 mb-1">{t.summary.remainingIncome}</p>
+                  <p className="text-lg font-bold text-green-700">RM {formatCurrency(results.remainingIncome)}</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           <div className="bg-white rounded-lg p-4 shadow-sm border border-gray-200">
             <p className="text-xs text-gray-500 mb-1 font-medium">{t.results.remainingAfterLoan}</p>
