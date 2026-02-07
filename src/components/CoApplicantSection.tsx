@@ -60,9 +60,9 @@ export default function CoApplicantSection({
   const totalTaxDeduction = mainSalaryTax + hustleTax;
 
   return (
-    <div className="bg-blue-50 rounded-lg p-4 sm:p-6 border-2 border-blue-200 space-y-6 animate-slideDown">
-      <div className="flex items-center gap-3 pb-4 border-b-2 border-blue-300">
-        <div className="w-8 h-8 bg-blue-500 text-white rounded-full flex items-center justify-center font-bold">
+    <div className="bg-gray-50 rounded-lg p-4 sm:p-6 border-l-4 border-emerald-500 border border-gray-200 shadow-sm space-y-6 animate-slideDown">
+      <div className="flex items-center gap-3 pb-4 border-b border-gray-200">
+        <div className="w-8 h-8 bg-emerald-600 text-white rounded-full flex items-center justify-center font-bold">
           2
         </div>
         <h3 className="text-xl md:text-2xl font-bold text-gray-900">
@@ -103,11 +103,11 @@ export default function CoApplicantSection({
             </div>
           )}
 
-          <div className="bg-gradient-to-r from-blue-50 to-blue-100 rounded-lg p-4 border border-blue-200">
+          <div className="bg-white rounded-lg p-4 border-l-4 border-emerald-400 border border-gray-200 shadow-sm">
             <div className="space-y-2">
-              <div className="flex justify-between items-center pb-2 border-b border-blue-300">
+              <div className="flex justify-between items-center pb-2 border-b border-gray-200">
                 <span className="text-sm font-medium text-gray-700">{t.income.grossIncome}:</span>
-                <span className="text-blue-700 font-semibold">RM {formatCurrency(grossIncome)}</span>
+                <span className="text-emerald-700 font-semibold">RM {formatCurrency(grossIncome)}</span>
               </div>
 
               {(totalEPFDeduction > 0 || totalTaxDeduction > 0) && (
@@ -127,9 +127,9 @@ export default function CoApplicantSection({
                 </div>
               )}
 
-              <div className="flex justify-between items-center pt-2 border-t border-blue-300">
+              <div className="flex justify-between items-center pt-2 border-t border-gray-200">
                 <span className="text-sm font-bold text-gray-800">{t.income.netIncome}:</span>
-                <span className="text-blue-700 text-lg font-bold">RM {formatCurrency(netIncome)}</span>
+                <span className="text-emerald-700 text-lg font-bold">RM {formatCurrency(netIncome)}</span>
               </div>
             </div>
           </div>
@@ -150,13 +150,13 @@ export default function CoApplicantSection({
       />
 
       <div>
-        <h2 className="text-2xl md:text-3xl font-bold text-gray-900 mb-6 pb-3 border-b-2 border-blue-600">{t.savings.title}</h2>
+        <h2 className="text-2xl md:text-3xl font-bold text-gray-900 mb-6 pb-3 border-b-2 border-emerald-500">{t.savings.title}</h2>
         <input
           type="text"
           placeholder="0"
           value={formatInputValue(coApplicant.monthlySavings)}
           onChange={(e) => handleNumberInput('monthlySavings', e.target.value)}
-          className="w-full px-3 sm:px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+          className="w-full px-3 sm:px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500"
         />
       </div>
     </div>
